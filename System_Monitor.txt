@@ -31,25 +31,21 @@ print_message() {
 # Placeholder function for security audit
 perform_security_audit() {
     print_message "info" "Running security audit..."
-    # TODO: Add security audit logic here
 }
 
 # Placeholder function for log monitoring
 monitor_logs() {
     print_message "info" "Monitoring logs for suspicious activities..."
-    # TODO: Add log monitoring logic here
 }
 
 # Placeholder function for privacy scan
 perform_privacy_scan() {
     print_message "info" "Scanning for sensitive data..."
-    # TODO: Add privacy scan logic here
 }
 
-# Placeholder function for resource and health monitoring
+# Placeholder function for system health monitoring
 monitor_system_health() {
     print_message "info" "Monitoring system health and resources..."
-    # TODO: Add system health monitoring logic here
 }
 
 # Main menu
@@ -65,6 +61,7 @@ show_menu() {
     echo "5. Exit"
     echo "============================"
     read -p "Choose an option [1-5]: " option
+    echo "DEBUG: You chose option $option"  # Debugging line to confirm input
     case $option in
         1)
             perform_security_audit
@@ -79,12 +76,16 @@ show_menu() {
             monitor_system_health
             ;;
         5)
+            print_message "success" "Exiting the script."
             exit 0
             ;;
         *)
             print_message "error" "Invalid option. Try again."
             ;;
     esac
+
+    # Force flushing the output
+    sleep 1
 }
 
 # Infinite loop to keep the script running
