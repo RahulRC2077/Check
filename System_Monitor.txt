@@ -31,6 +31,34 @@ print_message() {
 # Placeholder function for security audit
 perform_security_audit() {
     print_message "info" "Running security audit..."
+
+    # Check for open ports using nmap
+    print_message "info" "Checking open ports..."
+    sudo nmap -sT -O localhost | grep 'open'
+
+    # Check firewall status (for ufw)
+    print_message "info" "Checking firewall status..."
+    if sudo ufw status | grep -q "Status: active"; then
+        print_message "success" "Firewall is active."
+    else
+        print_message "warning" "Firewall is inactive. Consider enabling it."
+    fi
+
+    # List running services and highlight unnecessary or insecure ones
+    print_message "info" "Listing running services..."
+    sudo systemctl list-units --type=service --state=running
+
+    # Optional: Check for specific services that might be insecure
+    print_message "info" "Checking for potentially insecure services..."
+    if systemctl is-active --quiet telnet; then
+        print_message "warning" "Telnet service is running. Consider disabling it for security."
+    fi
+
+    if systemctl is-active --quiet ftp; then
+        print_message "warning" "FTP service is running. Consider using SFTP instead."
+    fi
+
+    print_message "success" "Security audit completed."
 }
 
 # Placeholder function for log monitoring
