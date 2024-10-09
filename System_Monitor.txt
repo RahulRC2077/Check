@@ -44,9 +44,22 @@ perform_security_audit() {
         print_message "warning" "Firewall is inactive. Consider enabling it."
     fi
 
-    # List running services and highlight unnecessary or insecure ones
-    print_message "info" "Listing running services..."
-    sudo systemctl list-units --type=service --state=running
+    # Define the log file
+    audit_log="security_audit_$(date +%F).log"
+
+    # Save the list of running services to a log file
+    sudo systemctl list-units --type=service --state=running > "$audit_log"
+    print_message "info" "Running services have been saved to $audit_log"
+
+    # Display the number of running services
+    service_count=$(cat "$audit_log" | wc -l)
+    print_message "info" "Number of running services: $service_count"
+
+    # Option to view the log file
+    read -p "Do you want to open the log file? [y/n]: " open_log
+    if [[ $open_log == "y" ]]; then
+        less "$audit_log"
+    fi
 
     # Optional: Check for specific services that might be insecure
     print_message "info" "Checking for potentially insecure services..."
